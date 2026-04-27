@@ -1,9 +1,150 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, useAnimation } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 export default function LandingPage() {
+  const [activeTab, setActiveTab] = useState(0)
+  const [year, setYear] = useState('')
+
+  useEffect(() => {
+    setYear(String(new Date().getFullYear()))
+  }, [])
+
+  const tabs = [
+    {
+      label: 'Dashboard',
+      content: (
+        <div style={{ padding: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 16 }}>
+            {[
+              { label: 'Vehículos activos', value: '24', color: '#111827' },
+              { label: 'Servicios este mes', value: '18', color: '#111827' },
+              { label: 'Alertas pendientes', value: '3', color: '#eab308' },
+              { label: 'En taller ahora', value: '2', color: '#3b82f6' },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.08 }}
+                style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: '12px 14px' }}
+              >
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', margin: '0 0 4px' }}>{stat.label}</p>
+                <p style={{ fontSize: 22, fontWeight: 700, color: stat.color, margin: 0 }}>{stat.value}</p>
+              </motion.div>
+            ))}
+          </div>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: '0 0 10px' }}>Próximos servicios</p>
+          {[
+            { name: 'Toyota Corolla · ABC123', client: 'Luis García', km: 4800, max: 5000, color: '#22c55e', label: 'Al día' },
+            { name: 'Ford Ranger · DEF456', client: 'Roberto Martínez', km: 1200, max: 5000, color: '#eab308', label: 'Pronto' },
+            { name: 'Fiat Palio · GHI789', client: 'Paula Fernández', km: 200, max: 5000, color: '#ef4444', label: 'Urgente' },
+          ].map((v, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.3 + i * 0.08 }}
+              style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: '10px 12px', marginBottom: 8 }}
+            >
+              <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                {v.client.slice(0, 2).toUpperCase()}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#fff', margin: '0 0 2px' }}>{v.name}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ flex: 1, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${(v.km / v.max) * 100}%` }}
+                      transition={{ duration: 0.8, delay: 0.5 + i * 0.1 }}
+                      style={{ height: '100%', borderRadius: 2, background: v.color }}
+                    />
+                  </div>
+                  <span style={{ fontSize: 9, color: v.color, flexShrink: 0 }}>{v.km.toLocaleString()} km</span>
+                </div>
+              </div>
+              <span style={{ fontSize: 9, padding: '2px 8px', borderRadius: 6, background: `${v.color}22`, color: v.color, border: `1px solid ${v.color}44`, fontWeight: 600, flexShrink: 0 }}>
+                {v.label}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      )
+    },
+    {
+      label: 'Vehículos',
+      content: (
+        <div style={{ padding: 20 }}>
+          <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: '8px 12px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="4" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2" /><path d="M8 8l2.5 2.5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2" strokeLinecap="round" /></svg>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>Buscar por patente, marca o cliente...</span>
+          </div>
+          {[
+            { brand: 'Toyota', model: 'Corolla', plate: 'ABC123', client: 'Luis García', km: '89.200', status: 'Al día', color: '#22c55e' },
+            { brand: 'Ford', model: 'Ranger', plate: 'DEF456', client: 'Roberto Martínez', km: '45.100', status: 'Pronto', color: '#eab308' },
+            { brand: 'Volkswagen', model: 'Gol', plate: 'GHI789', client: 'Ana López', km: '123.400', status: 'Urgente', color: '#ef4444' },
+          ].map((v, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
+              style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 12, padding: '12px 14px', marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+            >
+              <div>
+                <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', margin: '0 0 2px' }}>{v.brand} {v.model} · {v.plate}</p>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', margin: '0 0 4px' }}>{v.client}</p>
+                <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', margin: 0 }}>{v.km} km actuales</p>
+              </div>
+              <span style={{ fontSize: 9, padding: '3px 8px', borderRadius: 6, background: `${v.color}22`, color: v.color, border: `1px solid ${v.color}44`, fontWeight: 600 }}>
+                {v.status}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      )
+    },
+    {
+      label: 'Historial',
+      content: (
+        <div style={{ padding: 20 }}>
+          <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 12, padding: '14px', marginBottom: 14 }}>
+            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: '0 0 4px' }}>DATOS DEL VEHÍCULO</p>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: '0 0 2px' }}>Toyota Corolla · ABC123</p>
+            <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', margin: 0 }}>Luis García · 89.200 km actuales</p>
+          </div>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: '0 0 10px' }}>HISTORIAL DE SERVICIOS</p>
+          {[
+            { type: 'Cambio de aceite', date: '15/04/2026', km: '89.200', next: '94.200', cost: '$52.000', status: 'Completado', color: '#22c55e' },
+            { type: 'Cambio de filtro', date: '10/02/2026', km: '85.100', next: '90.100', cost: '$18.500', status: 'Completado', color: '#22c55e' },
+            { type: 'Alineación', date: '05/01/2026', km: '82.000', next: '—', cost: '$35.000', status: 'Completado', color: '#22c55e' },
+          ].map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
+              style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 10, padding: '10px 12px', marginBottom: 8 }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#fff', margin: 0 }}>{s.type}</p>
+                <span style={{ fontSize: 9, padding: '2px 7px', borderRadius: 5, background: `${s.color}22`, color: s.color, border: `1px solid ${s.color}44` }}>{s.status}</span>
+              </div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>{s.date}</span>
+                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>{s.km} km</span>
+                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>{s.cost}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )
+    }
+  ]
+
   return (
     <div style={{ minHeight: '100vh', background: '#fff', overflowX: 'hidden', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
 
@@ -19,31 +160,10 @@ export default function LandingPage() {
             <span style={{ fontWeight: 700, color: '#111827', fontSize: 14 }}>MecanicApp</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Link
-              href="/login"
-              style={{
-                fontSize: 14,
-                color: '#6b7280',
-                textDecoration: 'none',
-                display: 'none',
-              }}
-              className="hidden-mobile"
-            >
+            <Link href="/login" style={{ fontSize: 14, color: '#6b7280', textDecoration: 'none' }} className="hidden-mobile">
               Iniciar sesión
             </Link>
-            <Link
-              href="/register"
-              style={{
-                fontSize: 14,
-                fontWeight: 500,
-                color: '#fff',
-                background: '#2563eb',
-                padding: '8px 20px',
-                borderRadius: 12,
-                textDecoration: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <Link href="/register" style={{ fontSize: 14, fontWeight: 500, color: '#fff', background: '#2563eb', padding: '8px 20px', borderRadius: 12, textDecoration: 'none', whiteSpace: 'nowrap' }}>
               Empezar gratis
             </Link>
           </div>
@@ -63,7 +183,7 @@ export default function LandingPage() {
         <div style={{ position: 'absolute', top: -100, right: -80, width: 400, height: 400, borderRadius: '50%', background: 'rgba(37,99,235,0.35)', filter: 'blur(80px)', animation: 'floatOrb 6s ease infinite', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: -60, left: -60, width: 300, height: 300, borderRadius: '50%', background: 'rgba(96,165,250,0.2)', filter: 'blur(60px)', animation: 'floatOrb 8s ease infinite 2s', pointerEvents: 'none' }} />
 
-        <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -107,50 +227,44 @@ export default function LandingPage() {
             </Link>
           </motion.div>
 
+          {/* DEMO INTERACTIVA */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '24px', maxWidth: 580, margin: '0 auto' }}
+            style={{ maxWidth: 640, margin: '0 auto', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, overflow: 'hidden' }}
           >
-            <p style={{ fontSize: 11, color: '#60a5fa', marginBottom: 16, textAlign: 'left' }}>Vista previa del dashboard</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {[
-                { name: 'Toyota Corolla · ABC123', client: 'Luis García', km: 4800, max: 5000, color: '#22c55e', label: 'Al día' },
-                { name: 'Ford Ranger · DEF456', client: 'Roberto Martínez', km: 1200, max: 5000, color: '#eab308', label: 'Pronto' },
-                { name: 'Fiat Palio · GHI789', client: 'Paula Fernández', km: 200, max: 5000, color: '#ef4444', label: 'Urgente' },
-              ].map((v, i) => (
-                <motion.div
+            {/* Barra de tabs */}
+            <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '0 16px' }}>
+              {tabs.map((tab, i) => (
+                <button
                   key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.6 + i * 0.1 }}
-                  style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: '12px 16px' }}
+                  onClick={() => setActiveTab(i)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: '12px 16px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: activeTab === i ? '#60a5fa' : 'rgba(255,255,255,0.4)',
+                    cursor: 'pointer',
+                    borderBottom: activeTab === i ? '2px solid #60a5fa' : '2px solid transparent',
+                    transition: 'all 0.2s',
+                  }}
                 >
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                    {v.client.slice(0, 2).toUpperCase()}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', margin: '0 0 2px' }}>{v.name}</p>
-                    <p style={{ fontSize: 11, color: '#60a5fa', margin: '0 0 8px' }}>{v.client}</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <div style={{ flex: 1, height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${(v.km / v.max) * 100}%` }}
-                          transition={{ duration: 1, delay: 0.8 + i * 0.1 }}
-                          style={{ height: '100%', borderRadius: 3, background: v.color }}
-                        />
-                      </div>
-                      <span style={{ fontSize: 11, color: v.color, flexShrink: 0 }}>{v.km.toLocaleString()} km</span>
-                    </div>
-                  </div>
-                  <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 8, background: `${v.color}22`, color: v.color, border: `1px solid ${v.color}44`, fontWeight: 500, flexShrink: 0 }}>
-                    {v.label}
-                  </span>
-                </motion.div>
+                  {tab.label}
+                </button>
               ))}
             </div>
+            {/* Contenido del tab */}
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              {tabs[activeTab].content}
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -187,7 +301,7 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
+                transition={{ duration: 0.4, delay: i * 0.06 }}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 style={{ background: '#fff', border: '1px solid #f1f5f9', borderRadius: 20, padding: '28px 24px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
               >
@@ -204,81 +318,56 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* PLANS */}
+      {/* PRICING - LANZAMIENTO GRATUITO */}
       <section style={{ padding: '80px 24px', background: '#f8fafc' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            style={{ textAlign: 'center', marginBottom: 56 }}
           >
-            <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#111827', marginBottom: 12 }}>
-              Planes simples
+            <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#111827', marginBottom: 16 }}>
+              Gratis durante el lanzamiento
             </h2>
-            <p style={{ fontSize: 16, color: '#6b7280' }}>Empezá gratis y crecé cuando estés listo.</p>
-          </motion.div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
-            {[
-              { name: 'Gratis', price: '$0', period: 'para siempre', features: ['Hasta 10 vehículos', '1 mecánico', 'Historial completo', 'Export a PDF'], cta: 'Empezar gratis', highlight: false },
-              { name: 'Pro', price: '$4.999', period: 'por mes', features: ['Vehículos ilimitados', 'Hasta 5 mecánicos', 'Notificaciones por email', 'Estadísticas avanzadas', 'Soporte prioritario'], cta: 'Empezar prueba gratis', highlight: true },
-              { name: 'Taller', price: '$9.999', period: 'por mes', features: ['Todo lo del plan Pro', 'Mecánicos ilimitados', 'Múltiples sucursales', 'API de integración', 'Soporte dedicado'], cta: 'Contactar', highlight: false },
-            ].map((plan, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                style={{
-                  borderRadius: 24,
-                  padding: '36px 28px',
-                  position: 'relative',
-                  background: plan.highlight ? '#2563eb' : '#fff',
-                  border: plan.highlight ? 'none' : '1px solid #e5e7eb',
-                  boxShadow: plan.highlight ? '0 20px 60px rgba(37,99,235,0.3)' : '0 1px 3px rgba(0,0,0,0.06)',
-                }}
-              >
-                {plan.highlight && (
-                  <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: '#111827', color: '#fff', fontSize: 11, fontWeight: 600, padding: '4px 14px', borderRadius: 999 }}>
-                    Más popular
-                  </div>
-                )}
-                <p style={{ fontWeight: 700, color: plan.highlight ? '#fff' : '#111827', marginBottom: 4, fontSize: 16 }}>{plan.name}</p>
-                <p style={{ fontSize: 36, fontWeight: 800, color: plan.highlight ? '#fff' : '#111827', marginBottom: 4 }}>{plan.price}</p>
-                <p style={{ fontSize: 13, color: plan.highlight ? '#bfdbfe' : '#9ca3af', marginBottom: 28 }}>{plan.period}</p>
-                <ul style={{ listStyle: 'none', padding: 0, marginBottom: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {plan.features.map((f, j) => (
-                    <li key={j} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: plan.highlight ? '#fff' : '#374151' }}>
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M2 7l3.5 3.5L12 3" stroke={plan.highlight ? 'white' : '#2563eb'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <p style={{ fontSize: 16, color: '#6b7280', marginBottom: 40, lineHeight: 1.7 }}>
+              MecanicApp está en etapa de lanzamiento. Por tiempo limitado podés usar todas las funciones completamente gratis. Sin tarjeta, sin compromiso.
+            </p>
+            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 24, padding: '40px 32px', marginBottom: 24 }}>
+              <p style={{ fontSize: 40, fontWeight: 800, color: '#111827', marginBottom: 4 }}>$0</p>
+              <p style={{ fontSize: 14, color: '#9ca3af', marginBottom: 32 }}>durante el período de lanzamiento</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 32, textAlign: 'left' }}>
+                {[
+                  'Vehículos ilimitados',
+                  'Mecánicos ilimitados',
+                  'Historial completo',
+                  'Alertas de mantenimiento',
+                  'Notificaciones por email',
+                  'Export a PDF',
+                  'Estadísticas del taller',
+                  'Búsqueda instantánea',
+                ].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151' }}>
+                    <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M2 5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/register"
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    padding: '12px 20px',
-                    borderRadius: 12,
-                    fontSize: 14,
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    background: plan.highlight ? '#fff' : '#111827',
-                    color: plan.highlight ? '#2563eb' : '#fff',
-                  }}
-                >
-                  {plan.cta}
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                    </div>
+                    {f}
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/register"
+                style={{ display: 'block', textAlign: 'center', padding: '14px 20px', borderRadius: 14, fontSize: 15, fontWeight: 700, textDecoration: 'none', background: '#2563eb', color: '#fff' }}
+              >
+                Crear cuenta gratis
+              </Link>
+            </div>
+            <p style={{ fontSize: 13, color: '#9ca3af' }}>
+              Cuando lancemos los planes pagos te avisamos con anticipación. Sin sorpresas.
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -310,7 +399,7 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ borderTop: '1px solid #f1f5f9', padding: '24px', }}>
+      <footer style={{ borderTop: '1px solid #f1f5f9', padding: '24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ width: 24, height: 24, borderRadius: 6, background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -320,7 +409,7 @@ export default function LandingPage() {
             </div>
             <span style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>MecanicApp</span>
           </div>
-          <p style={{ fontSize: 12, color: '#9ca3af' }}>© {new Date().getFullYear()} MecanicApp. Todos los derechos reservados.</p>
+          <p style={{ fontSize: 12, color: '#9ca3af' }}>© {year} MecanicApp. Todos los derechos reservados.</p>
           <div style={{ display: 'flex', gap: 20 }}>
             <Link href="/login" style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'none' }}>Iniciar sesión</Link>
             <Link href="/register" style={{ fontSize: 12, color: '#9ca3af', textDecoration: 'none' }}>Registrarse</Link>
